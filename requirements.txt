@@ -1,0 +1,10 @@
+flask
+flask-wtf
+textblob 
+cryptography 
+pymongo 
+matplotlib
+wordcloud
+flask-login
+pytz
+python-dotenv

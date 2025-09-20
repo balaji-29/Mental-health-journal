@@ -1,0 +1,13 @@
+login
+logout
+add journal
+view journal
+report
+-----------------------
+
+colour 
+sky blue X
+black X
+
+blue or green
+based on the sentiment analysis background emojis should be displayed while reading it

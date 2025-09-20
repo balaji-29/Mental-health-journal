@@ -1,0 +1,8 @@
+What Happens Without Proper Setup of user model
+
+No User Model: user_loader can’t create current_user, so @login_required always redirects to /login.
+No get_id(): login_user fails with AttributeError (UserMixin prevents this).
+No user_loader: Flask-Login can’t fetch the user, so current_user is None.
+Weak SECRET_KEY: Session cookies can be forged (security risk).
+
+In interviews, explain: “I used Flask-Login to store user IDs in signed session cookies, fetched via user_loader for secure journal access.”

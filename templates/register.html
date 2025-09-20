@@ -1,0 +1,62 @@
+{% extends "login_base.html" %} {% block content %}
+
+<form
+  method="POST"
+  action="{{ url_for('register') }}"
+  class="bg-white/30 p-6 rounded-xl shadow-md w-96 h-[32rem] flex flex-col gap-4 backdrop-blur-md justify-center items-center"
+>
+  <div class="head">
+    <h2 class="text-2xl" style="font-family: 'Space Mono', monospace">
+      Register
+    </h2>
+  </div>
+  {{ form.hidden_tag() }}
+  <div class="body">
+    <div class="flex flex-col gap-2 mb-4">
+      <div>
+        <div class="label pb-2">{{ form.username.label }}</div>
+        <div class="user">
+          {{ form.username(size=32,
+          class="shadow-[inset_6px_6px_6px_rgba(0,0,0,0.3),inset_-6px_-6px_6px_rgba(255,255,255,0.5)]
+          text-black rounded-2xl h-[35px] focus:outline-none p-3") }}
+        </div>
+        {% for error in form.username.errors %}
+        <span style="color: red">[{{ error }}]</span><br />
+        {% endfor %}
+      </div>
+    </div>
+    <div class="flex flex-col gap-2 mb-4">
+      <div class="label">{{ form.email.label }}</div>
+      <div class="email">
+        {{ form.email(size=32,
+        class="shadow-[inset_6px_6px_6px_rgba(0,0,0,0.3),inset_-6px_-6px_6px_rgba(255,255,255,0.5)]
+        text-black rounded-2xl h-[35px] focus:outline-none p-3") }}
+      </div>
+      {% for error in form.email.errors %}
+      <span style="color: red">[{{ error }}]</span><br />
+      {% endfor %}
+    </div>
+    <div class="flex flex-col gap-2 mb-4">
+      <div class="label">{{ form.password.label }}</div>
+      <div class="pass">
+        {{ form.password(size=32,
+        class="shadow-[inset_6px_6px_6px_rgba(0,0,0,0.3),inset_-6px_-6px_6px_rgba(255,255,255,0.5)]
+        text-black rounded-2xl h-[35px] focus:outline-none p-3") }}
+      </div>
+      {% for error in form.password.errors %}
+      <span style="color: red">[{{ error }}]</span><br />
+      {% endfor %}
+    </div>
+    <div class="flex justify-center items-center">
+      {{ form.submit(class="bg-[#00ebc7] text-[#00214d] w-[300px] rounded-2xl
+      h-[35px] shadow-md cursor-pointer") }}
+    </div>
+    <div class="mt-4 text-center">
+      <p>
+        Already have an account?
+        <a href="{{ url_for('login') }}" class="hover:text-blue-500">Login</a>
+      </p>
+    </div>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "login_base.html" %} {% block content %}
+<form
+  method="POST"
+  action="{{ url_for('login') }}"
+  class="bg-white/30 p-6 rounded-xl shadow-md w-96 h-[32rem] flex flex-col gap-4 backdrop-blur-md justify-center items-center"
+>
+  <div class="head">
+    <h2 class="text-2xl" style="font-family: 'Space Mono', monospace">Login</h2>
+  </div>
+  {{ form.hidden_tag() }}
+  <div class="body">
+    <div class="flex flex-col gap-2 mb-4">
+      <div class="label">{{ form.username.label }}</div>
+      <div class="user">
+        {{ form.username(size=32,
+        class="shadow-[inset_6px_6px_6px_rgba(0,0,0,0.3),inset_-6px_-6px_6px_rgba(255,255,255,0.5)]
+        text-black rounded-2xl h-[35px] focus:outline-none p-3") }}
+      </div>
+
+      {% for error in form.username.errors %}
+      <span style="color: red">[{{ error }}]</span><br />
+      {% endfor %}
+    </div>
+    <div class="flex flex-col gap-2 mb-4">
+      <div class="label">{{ form.password.label(class="mb-5") }}</div>
+      <div class="pass">
+        {{
+        form.password(size=32,class="shadow-[inset_6px_6px_6px_rgba(0,0,0,0.3),inset_-6px_-6px_6px_rgba(255,255,255,0.5)]
+        text-black rounded-2xl h-[35px] focus:outline-none p-3") }}
+      </div>
+
+      {% for error in form.password.errors %}
+      <span style="color: red">[{{ error }}]</span><br />
+      {% endfor %}
+    </div>
+    <div class="flex justify-between items-center mb-4">
+      <div class="">
+        {{ form.remember(class="peer appearance-none h-5 w-5 border-2
+        border-gray-400 rounded-md bg-transparent checked:border-teal-500
+        focus:outline-none focus:ring-0 cursor-pointer relative top-[5px]") }}
+        {{ form.remember.label }}
+        <span
+          class="absolute left-[43px] bottom-[182px] hidden peer-checked:inline-flex items-center justify-center"
+        >
+          <svg
+            class="h-5 w-5 text-teal-500"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </span>
+      </div>
+      <div>
+        <a href="{{ url_for('register') }}" class="hover:text-blue-500"
+          >Forget password?</a
+        >
+      </div>
+    </div>
+
+    <div class="flex justify-center items-center">
+      {{ form.submit(class="bg-[#00ebc7] text-[#00214d] w-[300px] rounded-2xl
+      h-[35px] shadow-md cursor-pointer") }}
+    </div>
+    <div class="mt-4 text-center">
+      <p>
+        Don't have an account?
+        <a href="{{ url_for('register') }}" class="hover:text-blue-500"
+          >Register here</a
+        >
+      </p>
+    </div>
+  </div>
+</form>
+{% endblock %}
