@@ -5,13 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mental Health Journal</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=SUSE+Mono:ital,wght@0,100..800;1,100..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <header
-      class="bg-[#829f82] p-4 text-center text-2xl text-emerald-100 font-semibold shadow-md"
-    >
-      Mental Health Journal
-    </header>
+  <body
+    class="bg-gray-400/50 h-screen overflow-hidden"
+    style="font-family: 'Lato', sans-serif"
+  >
+    <nav class="flex items-center h-[50px] pt-4">
+      <div class="left justify-start ml-10 left-0">
+        <div class="p-4 text-center text-2xl font-semibold">
+          <a href="{{ url_for('all_journals') }}">Journal</a>
+        </div>
+      </div>
+      <div
+        class="middle flex justify-center gap-10 text-lg absolute left-[36rem]"
+      >
+        <div><a href="{{ url_for('add_entry')}}">Write</a></div>
+        <div><a href="{{ url_for('report')}}">Report</a></div>
+      </div>
+      <div class="right flex justify-end gap-10 text-lg mr-10 absolute right-0">
+        <div><a href="{{ url_for('logout')}}">Logout</a></div>
+      </div>
+    </nav>
+
     <main>{% block content %} {% endblock %}</main>
   </body>
 </html>

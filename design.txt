@@ -11,3 +11,12 @@ black X
 
 blue or green
 based on the sentiment analysis background emojis should be displayed while reading it
+calendar in the right side of the screen in the read page
+
+report-
+    Generate interactive visualizations, such as a mood calendar (color-coded days), line charts of sentiment over time, or word clouds highlighting common themes (e.g., frequent words like "anxious" or "happy").
+
+Anonymized Community Insights
+    With user consent, aggregate anonymized data (e.g., average sentiment scores by ZIP code or age group) to show broader trends, like "People in your area report higher positivity in summer." No personal entries are shared—only derived metrics.
+    need to add city, country, zip/pincode.
+    

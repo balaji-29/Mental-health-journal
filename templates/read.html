@@ -1,35 +1,76 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Your Journal Entries</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="container mt-5">
-      <h2>Your Journal Entries</h2>
+{% extends "base.html" %} {% block content %}
+<div class="h-screen w-full overflow-hidden">
+  <div class="left overflow-hidden">
+    <div class="text-[12rem] absolute -bottom-[40px] left-[50px]">{{ e1 }}</div>
+    <div class="text-[15rem] absolute bottom-20 right-[200px]">{{ e2 }}</div>
+    <div class="text-[10rem] absolute top-[80px] right-[150px] -z-1">
+      {{ e3 }}
+    </div>
+    <div class="e text-[3rem] absolute right-[450px] top-[150px]">{{ e4 }}</div>
+    <div class="e text-[5rem] absolute left-[120px] top-[60px]">{{ e5 }}</div>
+    <div class="e text-[6rem] absolute right-[180px] top-[50px]">{{ e6 }}</div>
+    <div class="e text-[5rem] absolute right-[500px] bottom-[300px]">
+      {{ e7 }}
+    </div>
+    <div class="e text-[13rem] absolute -bottom-[100px] -right-[100px]">
+      {{ e8 }}
+    </div>
+    <div class="e text-[8rem] absolute top-[200px] -left-[50px]">{{ e9 }}</div>
+    <div
+      class="container mt-5 w-[1200px] h-[600px] absolute top-[80px] left-[180px] flex flex-col overflow-y-auto"
+    >
       {% for entry in entries %}
-      <div class="card mb-3">
-        <div class="card-body">
-          <p>{{ entry.content }}</p>
-          <p><strong>Tags:</strong> {{ entry.tags | join(', ') }}</p>
+      <div
+        class="card bg-gray-400/80 flex p-4 m-4 rounded-xl shadow-lg justify-between w-[1100px] h-[500px] border-gray-400 absolute top-[50px]"
+      >
+        <div class="left-inside mt-5">
           <p>
-            <strong>Sentiment:</strong> Polarity: {{ entry.sentiment.polarity |
-            round(2) }}, Subjectivity: {{ entry.sentiment.subjectivity |
-            round(2) }}
+            <strong>Title</strong><br />
+            <div class="title h-[50px] w-[28rem] rounded-2xl mt-2 p-2 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)]
+        ">{{ entry.title }}</div>
           </p>
-          <p>
-            <strong>Date:</strong> {{ entry.timestamp.strftime('%Y-%m-%d
-            %H:%M:%S') }}
+          <hr class="border-b-1 border-gray-500 my-3 w-[28rem]" />
+          <p><strong>How you felt </strong><br />
+            <div class="cont h-[75px] w-[32rem] rounded-2xl mt-2 p-2 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)]">{{ entry.content }}</div>
           </p>
+          <hr class="border-b-1 border-gray-500 my-3 w-[32rem] h-auto" />
+          <p class="mt-5 ml-3">{{ entry.tags | join(' ') }}</p>
+        </div>
+        <div
+          class="right-inside bg-gray-500/50 flex font-semibold flex items-center  p-1 rounded-2xl shadow-lg border-gray-400 border-1 absolute right-[150px] top-[50px]"
+        >
+          <div
+            class=" w-fit text-[35px]"
+          >
+            <p class="text-shadow-md">{{ entry.month }}</p>
+          </div>
+          <hr class="border-l-2 border-gray-500 h-[40px] mx-2" />
+          <div class="p-1 text-left ">
+            <p>{{ entry.date }}</p>
+            <p>{{ entry.day }}</p>
+          </div>
+        </div>
+        <div class="qoute-cont absolute right-[100px] top-[150px]">
+        <hr class="border-b-1 border-gray-500 w-[25rem] my-2 " />
+        <div class="quotes h-[50px] w-[25rem] flex justify-center items-center gap-3 "><p><strong>For You</strong></p> <div class="quote rounded-2xl p-1 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)]">{{ quote }}</div></div>
+        <hr class="border-b-1 border-gray-500 w-[25rem] my-2" />
         </div>
       </div>
       {% endfor %}
-      <a href="{{ url_for('add_entry') }}" class="btn btn-primary"
+      <div class="buttons flex justify-center">
+      <a
+        href="{{ url_for('add_entry') }}"
+        class="w-fit bg-gray-400 absolute left-[150px] bottom-[100px] px-6 py-3 rounded-xl shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)] hover:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] transition border-gray-400 cursor-pointer"
         >Add New Entry</a
       >
+      <a
+        href="{{ url_for('all_journals') }}"
+        class="w-fit bg-gray-400 absolute left-[350px] bottom-[100px] px-6 py-3 rounded-xl shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)] hover:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] transition border-gray-400 cursor-pointer"
+        >Go Back to All Entries</a
+      >
+      </div>
     </div>
-  </body>
-</html>
+  </div>
+</div>
+
+{% endblock %}

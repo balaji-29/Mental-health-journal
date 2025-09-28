@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import TextAreaField, SubmitField, StringField, PasswordField,BooleanField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length,Email, EqualTo
 from flask_login import UserMixin
 
 class User(UserMixin):
@@ -13,14 +13,17 @@ class User(UserMixin):
 class JournalEntryForm(FlaskForm):
     title = StringField('Title', validators=[
         DataRequired(message="Please enter a title for your journal entry."),
-        Length(min=1, max=100, message="Title must be between 1 and 100 characters.")])
+        Length(min=1, max=100, message="Title must be between 1 and 100 characters.")],
+        render_kw={"placeholder": "Title"}
+)
     content = TextAreaField('Journal Entry', validators=[
         DataRequired(message="Please enter your journal entry."),
         Length(min=1, max=5000, message="Entry must be between 1 and 5000 characters.")
-    ])
+    ],render_kw={"placeholder": "How are you feeling today? Write your thoughts here..."}
+)
     tags = TextAreaField('Tags (optional)', validators=[
         Length(max=100, message="Tags must be under 100 characters.")
-    ])
+    ], render_kw={"placeholder": "Enter tags, separated by commas"})
     submit = SubmitField('Save Entry')
 
 class RegisterForm(FlaskForm):
@@ -47,3 +50,12 @@ class LoginForm(FlaskForm):
       ])
       remember = BooleanField('Remember Me')
       submit = SubmitField('Login')
+
+class ForgotPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Request Password Reset')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('New Password', validators=[DataRequired()])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Reset Password')

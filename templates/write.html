@@ -1,47 +1,85 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Add Journal Entry</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="container mt-5">
-      <h2>Add Journal Entry</h2>
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %} {% for category, message in messages %}
-      <div class="alert alert-{{ category }}">{{ message }}</div>
-      {% endfor %} {% endif %} {% endwith %}
+{% extends "base.html" %} {% block content %}
 
-      <form method="POST" action="{{ url_for('add_entry') }}">
+<div class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %}
+  <div class="alert alert-{{ category }}">{{ message }}</div>
+  {% endfor %} {% endif %} {% endwith %}
+
+  <div class="h-screen w-full overflow-hidden">
+    <div class="left overflow-hidden">
+      <div class="text-[12rem] absolute -bottom-[40px] left-[50px]">
+        {{ e1 }}
+      </div>
+      <div class="text-[15rem] absolute bottom-20 right-[200px]">{{ e2 }}</div>
+      <div class="text-[10rem] absolute top-[80px] right-[150px] -z-1">
+        {{ e3 }}
+      </div>
+      <div class="e text-[3rem] absolute right-[450px] top-[150px]">
+        {{ e4 }}
+      </div>
+      <div class="e text-[5rem] absolute left-[120px] top-[60px]">{{ e5 }}</div>
+      <div class="e text-[6rem] absolute right-[180px] top-[50px]">
+        {{ e6 }}
+      </div>
+      <div class="e text-[5rem] absolute right-[500px] bottom-[300px]">
+        {{ e7 }}
+      </div>
+      <div class="e text-[13rem] absolute -bottom-[100px] -right-[100px]">
+        {{ e8 }}
+      </div>
+      <div class="e text-[8rem] absolute top-[200px] -left-[50px]">
+        {{ e9 }}
+      </div>
+    </div>
+    <div
+      class="container bg-gray-400/50 w-[1200px] h-[600px] absolute top-[100px] left-[180px] rounded-[50px] flex flex-col border-gray-400 shadow-2xl"
+    >
+      <form
+        method="POST"
+        action="{{ url_for('add_entry') }}"
+        class="flex flex-col gap-4 p-6 justify-center absolute top-[50px] left-[100px]"
+      >
         {{ form.hidden_tag() }}
         <!-- Adds CSRF token -->
-        <div class="mb-3">
-          {{ form.title.label(class="form-label") }} {{
-          form.title(class="form-control", rows=5) }} {% if form.title.errors %}
-          {% for error in form.title.errors %}
+        <div class="">
+          {{ form.title.label(class="form-label") }}<br />
+          {{ form.title(class="form-control px-4 py-3 rounded-xl
+          shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0.1)]
+          focus:outline-none w-full border-gray-400", rows=5) }} {% if
+          form.title.errors %} {% for error in form.title.errors %}
           <small class="text-danger">{{ error }}</small>
           {% endfor %} {% endif %}
         </div>
         <div class="mb-3">
-          {{ form.content.label(class="form-label") }} {{
-          form.content(class="form-control", rows=5) }} {% if
-          form.content.errors %} {% for error in form.content.errors %}
+          {{ form.content.label(class="form-label") }} <br />
+          {{ form.content(class="form-control w-[32rem] rounded-xl px-4 py-3
+          outline-none border-0 resize-none focus:ring-0
+          focus:border-transparent
+          shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0.1)]
+          border-gray-400", rows=5) }} {% if form.content.errors %} {% for error
+          in form.content.errors %}
           <small class="text-danger">{{ error }}</small>
           {% endfor %} {% endif %}
         </div>
         <div class="mb-3">
-          {{ form.tags.label(class="form-label") }} {{
-          form.tags(class="form-control", placeholder="Enter tags, separated by
-          commas") }} {% if form.tags.errors %} {% for error in form.tags.errors
-          %}
+          {{ form.tags.label(class="form-label") }}<br />
+          {{ form.tags(class="form-control w-[32rem] rounded-xl px-4 py-3
+          outline-none border-0 resize-none focus:ring-0
+          focus:border-transparent
+          shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0.1)]
+          border-gray-400", placeholder="Enter tags, separated by commas") }} {%
+          if form.tags.errors %} {% for error in form.tags.errors %}
           <small class="text-danger">{{ error }}</small>
           {% endfor %} {% endif %}
         </div>
-        {{ form.submit(class="btn btn-primary") }}
+        {{ form.submit(class="w-fit absolute left-[25rem] -bottom-[30px] px-6
+        py-3 rounded-xl
+        shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)]
+        hover:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)]
+        transition border-gray-400 cursor-pointer") }}
       </form>
     </div>
-  </body>
-</html>
+  </div>
+</div>
+{% endblock %}

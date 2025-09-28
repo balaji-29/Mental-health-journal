@@ -8,3 +8,5 @@ wordcloud
 flask-login
 pytz
 python-dotenv
+flask-mail
+email_validator

@@ -6,3 +6,15 @@ No user_loader: Flask-Login can’t fetch the user, so current_user is None.
 Weak SECRET_KEY: Session cookies can be forged (security risk).
 
 In interviews, explain: “I used Flask-Login to store user IDs in signed session cookies, fetched via user_loader for secure journal access.”
+
+month issue
+for title i needed month name but for url redirect i needed month number
+
+
+i have two records stored in mongodb for 14th sept and 23rd sept.
+but 14th sept records are not displayed when i clicked. 23rd records are visible.
+the issue is i'm fetching records for a week. 14th sept is end of the week.
+ based on the condition records >= than start of the week && records <= end of the week will be fetched.
+<= end of the week means 14-09-2025T00:00:00. but my record inserted time is 2025-09-14T22:05:13.271737+05:30.
+so the end of the week records are getting skipped. i modified the code to take max time of end of the week record.
+and the issue is resolved.

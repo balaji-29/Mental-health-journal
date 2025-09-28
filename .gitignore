@@ -1,0 +1,7 @@
+__pycache__*
+calendar_test.py
+test_code.py
+venv/
+*.pyc
+*.pyo
+issues_faced.txt
