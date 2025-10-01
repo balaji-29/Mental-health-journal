@@ -17,6 +17,8 @@ import calendar
 from calendar_design import calendar_design
 from bson.objectid import ObjectId
 import random
+import plotly
+import plotly.graph_objs as go
 import json
 
 
@@ -428,6 +430,64 @@ def reset_password(token):
     
     return render_template('reset_password.html', form=form, title='Reset Password', token=token)
 
+@app.route('/journal/sentiment_report', methods=['GET'])
+@login_required
+def sentiment_report():
+    logging.debug(f"Generating sentiment report for user: {current_user.get_id()}")
+    # Get date range from query params (default: last 30 days)
+    end_date = request.args.get('end_date', datetime.now(pytz.timezone('Asia/Kolkata')).isoformat())
+    start_date = request.args.get('start_date', (datetime.now(pytz.timezone('Asia/Kolkata')) - timedelta(days=30)).isoformat())
+    try:
+        start_date = datetime.fromisoformat(start_date)
+        end_date = datetime.fromisoformat(end_date)
+    except ValueError:
+        flash('Invalid date format.', 'danger')
+        return redirect(url_for('view_journal'))
+
+    entries = app.db.Journals.find({
+        'user_id': current_user.get_id(),
+        'timestamp': {'$gte': start_date.isoformat(), '$lte': end_date.isoformat()}
+    }).sort('timestamp', 1)
+
+    dates = []
+    polarities = []
+    subjectivities = []
+    for entry in entries:
+        try:
+            timestamp = datetime.fromisoformat(entry.get('timestamp')).strftime('%Y-%m-%d')
+            dates.append(timestamp)
+            polarities.append(entry.get('sentiment', {}).get('polarity', 0))
+            subjectivities.append(entry.get('sentiment', {}).get('subjectivity', 0))
+        except Exception as e:
+            logging.error(f"Error processing entry for report: {e}")
+
+    # Create Plotly figure
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=dates,
+        y=polarities,
+        mode='lines+markers',
+        name='Polarity',
+        line=dict(color='#4CAF50')
+    ))
+    fig.add_trace(go.Scatter(
+        x=dates,
+        y=subjectivities,
+        mode='lines+markers',
+        name='Subjectivity',
+        line=dict(color='#2196F3')
+    ))
+    fig.update_layout(
+        title='Sentiment Analysis Report',
+        xaxis_title='Date',
+        yaxis_title='Score',
+        yaxis=dict(range=[-1, 1]),
+        template='plotly_white'
+    )
+
+    # Convert to JSON for template
+    graph_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('sentiment_report.html', graph_json=graph_json, start_date=start_date.isoformat(), end_date=end_date.isoformat())
 
 if __name__ == '__main__':
     app.run(debug=True)

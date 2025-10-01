@@ -8,55 +8,61 @@
 
   <div class="h-screen w-full overflow-hidden">
     <div class="left overflow-hidden">
-      <div class="text-[12rem] absolute -bottom-[40px] left-[50px]">
+      <div class="text-[12rem] absolute -bottom-[40px] left-[50px] -z-1">
         {{ e1 }}
       </div>
-      <div class="text-[15rem] absolute bottom-20 right-[200px]">{{ e2 }}</div>
+      <div class="text-[15rem] absolute bottom-20 right-[200px] -z-2">
+        {{ e2 }}
+      </div>
       <div class="text-[10rem] absolute top-[80px] right-[150px] -z-1">
         {{ e3 }}
       </div>
       <div class="e text-[3rem] absolute right-[450px] top-[150px]">
         {{ e4 }}
       </div>
-      <div class="e text-[5rem] absolute left-[120px] top-[60px]">{{ e5 }}</div>
-      <div class="e text-[6rem] absolute right-[180px] top-[50px]">
+      <div class="e text-[5rem] absolute left-[120px] top-[60px] -z-2">
+        {{ e5 }}
+      </div>
+      <div class="e text-[6rem] absolute right-[180px] top-[50px] -z-1">
         {{ e6 }}
       </div>
-      <div class="e text-[5rem] absolute right-[500px] bottom-[300px]">
+      <div
+        class="e text-[5rem] absolute right-0 lg:right-[500px] bottom-[300px]"
+      >
         {{ e7 }}
       </div>
       <div class="e text-[13rem] absolute -bottom-[100px] -right-[100px]">
         {{ e8 }}
       </div>
-      <div class="e text-[8rem] absolute top-[200px] -left-[50px]">
+      <div class="e text-[8rem] absolute top-[200px] -left-[50px] -z-2">
         {{ e9 }}
       </div>
     </div>
     <div
-      class="container bg-gray-400/50 w-[1200px] h-[600px] absolute top-[100px] left-[180px] rounded-[50px] flex flex-col border-gray-400 shadow-2xl"
+      class="container bg-gray-400/50 w-[25rem] h-full ml-10 lg:w-[75rem] lg:h-[600px] lg:absolute lg:top-[100px] lg:left-[180px] rounded-[50px] flex flex-col border-gray-400 shadow-2xl"
     >
       <form
         method="POST"
         action="{{ url_for('add_entry') }}"
-        class="flex flex-col gap-4 p-6 justify-center absolute top-[50px] left-[100px]"
+        class="flex flex-col gap-4 p-6 justify-center lg:absolute lg:top-[50px] lg:left-[100px] z-10"
       >
         {{ form.hidden_tag() }}
         <!-- Adds CSRF token -->
         <div class="">
           {{ form.title.label(class="form-label") }}<br />
-          {{ form.title(class="form-control px-4 py-3 rounded-xl
-          shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0.1)]
-          focus:outline-none w-full border-gray-400", rows=5) }} {% if
-          form.title.errors %} {% for error in form.title.errors %}
+          {{ form.title(class="form-control m-0 px-4 py-3 rounded-xl
+          shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0)]
+          focus:outline-none w-[20rem] lg:w-full border-gray-400 ", rows=5) }}
+          {% if form.title.errors %} {% for error in form.title.errors %}
           <small class="text-danger">{{ error }}</small>
           {% endfor %} {% endif %}
         </div>
         <div class="mb-3">
           {{ form.content.label(class="form-label") }} <br />
-          {{ form.content(class="form-control w-[32rem] rounded-xl px-4 py-3
-          outline-none border-0 resize-none focus:ring-0
+          {{ form.content(class="form-control w-[20rem] lg:w-[32rem] rounded-xl
+          px-4 py-3 outline-none border-0 resize-none focus:ring-0
           focus:border-transparent
-          shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0.1)]
+          shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0)]
           border-gray-400", rows=5) }} {% if form.content.errors %} {% for error
           in form.content.errors %}
           <small class="text-danger">{{ error }}</small>
@@ -64,17 +70,17 @@
         </div>
         <div class="mb-3">
           {{ form.tags.label(class="form-label") }}<br />
-          {{ form.tags(class="form-control w-[32rem] rounded-xl px-4 py-3
-          outline-none border-0 resize-none focus:ring-0
+          {{ form.tags(class="form-control w-[20rem] lg:w-[32rem] rounded-xl
+          px-4 py-3 outline-none border-0 resize-none focus:ring-0
           focus:border-transparent
-          shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0.1)]
+          shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0)]
           border-gray-400", placeholder="Enter tags, separated by commas") }} {%
           if form.tags.errors %} {% for error in form.tags.errors %}
           <small class="text-danger">{{ error }}</small>
           {% endfor %} {% endif %}
         </div>
-        {{ form.submit(class="w-fit absolute left-[25rem] -bottom-[30px] px-6
-        py-3 rounded-xl
+        {{ form.submit(class="w-fit ml-[200px] lg:ml-0 lg:absolute
+        lg:left-[25rem] lg:-bottom-[30px] px-6 py-3 rounded-xl
         shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)]
         hover:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)]
         transition border-gray-400 cursor-pointer") }}

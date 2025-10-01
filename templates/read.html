@@ -9,7 +9,7 @@
     <div class="e text-[3rem] absolute right-[450px] top-[150px]">{{ e4 }}</div>
     <div class="e text-[5rem] absolute left-[120px] top-[60px]">{{ e5 }}</div>
     <div class="e text-[6rem] absolute right-[180px] top-[50px]">{{ e6 }}</div>
-    <div class="e text-[5rem] absolute right-[500px] bottom-[300px]">
+    <div class="e text-[5rem] absolute right-0 lg:right-[500px] bottom-[300px]">
       {{ e7 }}
     </div>
     <div class="e text-[13rem] absolute -bottom-[100px] -right-[100px]">
@@ -17,40 +17,40 @@
     </div>
     <div class="e text-[8rem] absolute top-[200px] -left-[50px]">{{ e9 }}</div>
     <div
-      class="container mt-5 w-[1200px] h-[600px] absolute top-[80px] left-[180px] flex flex-col overflow-y-auto"
+      class="container mt-5 w-[25rem] lg:w-[75rem] h-full lg:h-[600px] lg:absolute lg:top-[80px] lg:left-[180px] flex flex-col"
     >
       {% for entry in entries %}
       <div
-        class="card bg-gray-400/80 flex p-4 m-4 rounded-xl shadow-lg justify-between w-[1100px] h-[500px] border-gray-400 absolute top-[50px]"
+        class="card bg-gray-400/80 flex p-4 mt-7 ml-3 rounded-xl shadow-lg justify-between w-[30rem] h-[35rem] lg:w-[1100px] lg:h-[500px] border-gray-400 absolute top-[50px]"
       >
         <div class="left-inside mt-5">
           <p>
             <strong>Title</strong><br />
-            <div class="title h-[50px] w-[28rem] rounded-2xl mt-2 p-2 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)]
+            <div class="title h-[50px] w-[25rem] lg:w-[28rem] rounded-2xl mt-2 p-2 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0)]
         ">{{ entry.title }}</div>
           </p>
           <hr class="border-b-1 border-gray-500 my-3 w-[28rem]" />
           <p><strong>How you felt </strong><br />
-            <div class="cont h-[75px] w-[32rem] rounded-2xl mt-2 p-2 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)]">{{ entry.content }}</div>
+            <div class="cont h-[75px] w-[25rem] lg:w-[32rem] rounded-2xl mt-2 p-2 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)]">{{ entry.content }}</div>
           </p>
           <hr class="border-b-1 border-gray-500 my-3 w-[32rem] h-auto" />
           <p class="mt-5 ml-3">{{ entry.tags | join(' ') }}</p>
         </div>
         <div
-          class="right-inside bg-gray-500/50 flex font-semibold flex items-center  p-1 rounded-2xl shadow-lg border-gray-400 border-1 absolute right-[150px] top-[50px]"
+          class="right-inside w-fit bg-gray-500/50 flex lg:font-semibold flex items-center  p-1 rounded-2xl shadow-lg border-gray-400 border-1 absolute right-[10px] top-[10px] lg:right-[150px] lg:top-[50px] lg:left-auto"
         >
           <div
-            class=" w-fit text-[35px]"
+            class=" w-fit text-[15px] lg:text-[35px]"
           >
-            <p class="text-shadow-md">{{ entry.month }}</p>
+            <p class="text-shadow-md text-white">{{ entry.month }}</p>
           </div>
           <hr class="border-l-2 border-gray-500 h-[40px] mx-2" />
-          <div class="p-1 text-left ">
+          <div class="p-1 text-left text-gray-200 text-[12px] lg:text-[20px]">
             <p>{{ entry.date }}</p>
             <p>{{ entry.day }}</p>
           </div>
         </div>
-        <div class="qoute-cont absolute right-[100px] top-[150px]">
+        <div class="qoute-cont ml-5 mt-2 lg:ml-0 lg:mt-0 absolute left-0 top-[300px] lg:right-[100px] lg:top-[150px] lg:left-auto">
         <hr class="border-b-1 border-gray-500 w-[25rem] my-2 " />
         <div class="quotes h-[50px] w-[25rem] flex justify-center items-center gap-3 "><p><strong>For You</strong></p> <div class="quote rounded-2xl p-1 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)]">{{ quote }}</div></div>
         <hr class="border-b-1 border-gray-500 w-[25rem] my-2" />
@@ -60,12 +60,12 @@
       <div class="buttons flex justify-center">
       <a
         href="{{ url_for('add_entry') }}"
-        class="w-fit bg-gray-400 absolute left-[150px] bottom-[100px] px-6 py-3 rounded-xl shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)] hover:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] transition border-gray-400 cursor-pointer"
+        class="w-fit bg-gray-400 absolute left-[85px] bottom-[150px] lg:left-[150px] lg:bottom-[100px] px-6 py-3 rounded-xl shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)] hover:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] transition border-gray-400 cursor-pointer"
         >Add New Entry</a
       >
       <a
         href="{{ url_for('all_journals') }}"
-        class="w-fit bg-gray-400 absolute left-[350px] bottom-[100px] px-6 py-3 rounded-xl shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)] hover:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] transition border-gray-400 cursor-pointer"
+        class="w-fit bg-gray-400 absolute left-[250px] bottom-[150px] lg:left-[350px] lg:bottom-[100px] px-6 py-3 rounded-xl shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)] hover:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] transition border-gray-400 cursor-pointer"
         >Go Back to All Entries</a
       >
       </div>

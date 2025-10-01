@@ -1,0 +1,62 @@
+{% extends "base.html" %} {% block head %}
+<script src="https://cdn.jsdelivr.net/npm/plotly.js@2.27.0/dist/plotly.min.js"></script>
+{% endblock %} {% block content %}
+<div class="container mt-5 lg:w-[1300px] lg:ml-30">
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %} {% for category, message in messages %}
+  <div class="alert alert-{{ category }}">{{ message }}</div>
+  {% endfor %} {% endif %} {% endwith %}
+  <form
+    method="GET"
+    action="{{ url_for('sentiment_report') }}"
+    class="mb-5 lg:w-[1300px] flex"
+  >
+    <div class="row lg:w-full flex justify-center items-center gap-4 ml-3">
+      <div class="date-field flex flex-col lg:flex-row gap-3">
+        <div class="flex items-center gap-3">
+          <label for="start_date" class="form-label text-nowrap"
+            >Start Date:</label
+          >
+          <input
+            type="date"
+            name="start_date"
+            id="start_date"
+            class="form-control ml-2 p-1 lg:ml-0 rounded-xl shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0.1)] focus:outline-none w-full border-gray-400"
+            value="{{ start_date | replace('T', ' ') | slice(0, 10) }}"
+          />
+        </div>
+        <div class="flex gap-3 items-center">
+          <label for="end_date" class="form-label text-nowrap">End Date:</label>
+          <input
+            type="date"
+            name="end_date"
+            id="end_date"
+            class="form-control ml-4 lg:ml-0 p-1 rounded-xl shadow-[inset_6px_6px_12px_rgba(0,0,0,0.3),inset_-6px_-6px_12px_rgba(255,255,255,0.1)] focus:outline-none w-full border-gray-400"
+          />
+        </div>
+      </div>
+      <div class="col-md-4 align-self-end">
+        <button
+          type="submit"
+          class="rounded-xl p-2 bg-gray-400/80 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)] hover:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] transition border-gray-400 cursor-pointer"
+        >
+          Update Report
+        </button>
+      </div>
+    </div>
+  </form>
+  <div id="sentimentChart" class="m-3"></div>
+  <script>
+        var graph = {{ graph_json | safe }};
+        Plotly.newPlot('sentimentChart', graph.data, graph.layout,{
+      responsive: true
+    });
+  </script>
+  <a
+    href="{{ url_for('all_journals') }}"
+    class="absolute bottom-[30px] lg:bottom-[45px] right-[200px] lg:right-[180px] rounded-xl p-2 bg-gray-400/80 shadow-[8px_8px_16px_rgba(0,0,0,0.3),-8px_-8px_16px_rgba(255,255,255,0.1)] hover:shadow-[inset_4px_4px_8px_rgba(0,0,0,0.3),inset_-4px_-4px_8px_rgba(255,255,255,0.1)] transition border-gray-400 cursor-pointer"
+    >View Entries</a
+  >
+</div>
+
+{% endblock %}

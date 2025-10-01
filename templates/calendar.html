@@ -1,37 +1,47 @@
 {% extends "base.html" %} {% block content %}
 
-<div class="h-screen flex flex-col lg:flex-row gap-6">
+<div
+  class="lg:h-screen max-h-[80vh] overflow-y-auto lg:overflow-hidden grid grid-cols-1 lg:grid-cols-3 gap-10 mt-3"
+>
   <!-- Left: Journal Entries -->
   <div
-    class="w-[62rem] bg-white/20 backdrop-blur-lg border border-white/10 rounded-xl p-6 shadow-lg absolute left-[50px] top-[100px] overflow-y-auto h-[80vh]"
+    class="bg-white/20 backdrop-blur-lg border border-white/10 rounded-xl p-6 shadow-lg h-auto w-[27rem] col-span-1 lg:w-[60rem] lg:col-span-2 ml-10"
   >
     <h2 class="text-2xl font-bold mb-4 text-center">
       {{ month }} {% if year != current_year %} {{ year }} {% endif %}
     </h2>
-    {% for entry in entries %}
-    <div class="mb-6">
-      <div class="flex items-center">
+    {% if entries|length > 0 %} {% for entry in entries %}
+
+    <div
+      class="grid lg:grid-cols-2 lg:col-span-3 gap-4 mb-4 items-center grid-cols-1 col-span-2 md:grid-cols-1 md:col-span-2"
+    >
+      <div class="entries flex">
         <div
-          class="bg-white/20 w-20 h-20 flex flex-col justify-center items-center rounded-lg"
+          class="bg-gray-400/20 w-20 h-20 flex flex-col justify-center items-center rounded-l-lg"
         >
           <div class="date text-md">{{ entry.date }}</div>
           <div class="day">{{ entry.day }}</div>
         </div>
 
-        <p class="p-4 bg-white/20 rounded-lg w-full h-20 align-middle">
+        <div
+          class="p-4 bg-gray-400/20 rounded-r-lg w-[20rem] h-20 align-middle"
+        >
           <a href="{{ url_for('entry_detail', entry_id=entry.id) }}">
             {{ entry.title }}
           </a>
-        </p>
+        </div>
       </div>
     </div>
-    {% endfor %}
+
+    {% endfor %} {% else %}
+    <p class="text-center">No entries for this period.</p>
+    {% endif %}
     <!--p class="/80 text-center">No entries for {{ month }}.</p!-->
   </div>
 
   <!-- Right: Calendar -->
   <div
-    class="w-[25rem] h-[30rem] bg-white/30 backdrop-blur-md rounded-xl p-6 shadow-xl absolute right-[50px] top-[100px]"
+    class="w-[25rem] ml-12 lg:h-[30rem] bg-white/30 backdrop-blur-md rounded-xl p-6 shadow-xl"
   >
     <div class="flex flex-col justify-between items-center mb-6">
       <div class="top flex justify-between items-center w-full">
@@ -102,6 +112,23 @@
       </div>
     </div>
     <div class="overflow-hidden table-auto w-full p-2">{{ calendar|safe }}</div>
+    <div class="colour-detail ml-6">
+      <div class="positive flex items-center mb-2">
+        <p class="green w-2 h-2 rounded-full bg-green-500"></p>
+        <span class="ml-2">Positive Mood</span>
+      </div>
+      <div class="negative flex items-center mb-2">
+        <p class="red w-2 h-2 rounded-full bg-red-500"></p>
+        <span class="ml-2">Negative Mood</span>
+      </div>
+      <div class="neutral flex items-center mb-2">
+        <p class="green w-2 h-2 rounded-full bg-yellow-500"></p>
+        <span class="ml-2">Normal Mood</span>
+      </div>
+      <div class="no-entries">
+        <span class="ml-2">No Colours For No Entires</span>
+      </div>
+    </div>
   </div>
 </div>
 
