@@ -11,4 +11,5 @@ python-dotenv
 flask-mail
 email_validator
 plotly
+bs4
 gunicorn
