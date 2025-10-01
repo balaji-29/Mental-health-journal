@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify,render_template,redirect,url_for,flash, session
+from flask import Flask, request, jsonify,render_template,redirect,url_for,flash, session,make_response
 from pymongo import MongoClient
 from cryptography.fernet import Fernet
 from flask_login import current_user, LoginManager,login_user,logout_user,login_required
@@ -20,7 +20,7 @@ import random
 import plotly
 import plotly.graph_objs as go
 import json
-
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s')
 
 
 load_dotenv()
@@ -30,12 +30,14 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['WTF_CSRF_ENABLED'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['SESSION_COOKIE_SECURE'] = False
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)  
+app.config['SESSION_PROTECTION'] = 'strong'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'balajiak9598@gmail.com'  # Replace with your email
-app.config['MAIL_PASSWORD'] = 'ypuk lshk gbjk xbgx'     # Replace with your app-specific password
+app.config['MAIL_USERNAME'] = 'balajiak9598@gmail.com'  
+app.config['MAIL_PASSWORD'] = 'ypuk lshk gbjk xbgx'     
 app.config['MAIL_DEFAULT_SENDER'] = 'balajiak9598@gmail.com'
 
 
@@ -73,7 +75,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'  # Redirect to login page if not authenticated
 
-logging.basicConfig(level=logging.DEBUG)
+
 
 happy_emojis = {"e1":"😂","e2":"😍","e3":"😎","e4":"😁","e5":"🤭","e6":"🤫","e7":"😚","e8":"😇","e9":"😉"}
 sad_emojis = {"e1":"😢","e2":"😭","e3":"😞","e4":"😔","e5":"😟","e6":"😕","e7":"☹️","e8":"🙁","e9":"😣"}
@@ -352,7 +354,7 @@ def login():
             if user_data and check_password_hash(user_data['password'], password): 
                 # Verify hashed password in production 
                 user = User(user_data['email'], str(user_data['_id']))  
-                login_user(user,remember=form.remember.data) 
+                login_user(user,remember=False)#form.remember.data 
                 logging.debug(f"User {username} logged in, session: {session.get('_user_id')}")
               
                 return redirect(url_for('all_journals'))
@@ -368,8 +370,14 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
+    session.clear() 
+    response = make_response(redirect(url_for('login')))
+    response.set_cookie('remember_token','', expires=0, path='/', secure=True, httponly=True, samesite='Lax')
+    response.delete_cookie('session', path='/')  
+
     flash('You have been logged out.', 'info')
-    return redirect(url_for('login'))
+    return response
+    
 
 def generate_reset_token(email):
     user = app.db.Users.find_one({'email': email})
