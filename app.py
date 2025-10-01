@@ -220,7 +220,7 @@ def all_journals():
 @login_required
 @app.route('/entry/<entry_id>')
 def entry_detail(entry_id): 
-    logging.debug(f"Accessing view_journal for user: {current_user.get_id()}")
+    logging.debug(f"Accessing all_journals for user: {current_user.get_id()}")
         
     # add entry_id to fetch single entry
     entries = app.db.Journals.find({'_id': ObjectId(entry_id), 'user_id': current_user.get_id() })
@@ -302,7 +302,7 @@ def add_entry():
         }
         app.db.Journals.insert_one(entry)  
         flash('Journal entry saved successfully!', 'success')
-        return redirect(url_for('view_journal'))
+        return redirect(url_for('all_journals'))
     
     return render_template('write.html', form=form, title='New Journal Entry', e1="😂", e2="😍",e3="😎",e4="😁",e5="🤭",e6="🤫",e7="😚",e8="😇",e9="😉")
 
@@ -355,7 +355,7 @@ def login():
                 login_user(user,remember=form.remember.data) 
                 logging.debug(f"User {username} logged in, session: {session.get('_user_id')}")
               
-                return redirect(url_for('view_journal'))
+                return redirect(url_for('all_journals'))
             else:
                 logging.warning(f"Failed login attempt for username: {username}")
                 flash('Invalid username or password.', 'danger')
@@ -442,7 +442,7 @@ def sentiment_report():
         end_date = datetime.fromisoformat(end_date)
     except ValueError:
         flash('Invalid date format.', 'danger')
-        return redirect(url_for('view_journal'))
+        return redirect(url_for('all_journals'))
 
     entries = app.db.Journals.find({
         'user_id': current_user.get_id(),
