@@ -4,9 +4,11 @@ from wtforms.validators import DataRequired, Length,Email, EqualTo
 from flask_login import UserMixin
 
 class User(UserMixin):
-    def __init__(self, email, id):
+    def __init__(self, email, id,username):
         self.email = email
         self.id = id  # Must be string for get_id()
+        self.username = username  # Optional, for display purposes
+        
     # UserMixin provides is_authenticated, etc.
 
 

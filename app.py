@@ -20,7 +20,8 @@ import random
 import plotly
 import plotly.graph_objs as go
 import json
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s')
+from itsdangerous import BadSignature
+# logging.basicConfig(level=# logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s')
 
 
 load_dotenv()
@@ -31,6 +32,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['WTF_CSRF_ENABLED'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True 
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)  
 app.config['SESSION_PROTECTION'] = 'strong'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -56,14 +58,14 @@ def load_or_generate_key():
         with open(ENCRYPTION_KEY_FILE, 'rb') as f:
             key =  f.read()
             if len(base64.urlsafe_b64decode(key)) == 32:
-                    logging.debug(f"Loaded valid Fernet key from {ENCRYPTION_KEY_FILE}")
+                    ## logging.debug(f"Loaded valid Fernet key from {ENCRYPTION_KEY_FILE}")
                     return key
-            else:
-                logging.warning(f"Invalid key in {ENCRYPTION_KEY_FILE}, generating new key")
+            #else:
+                # logging.warning(f"Invalid key in {ENCRYPTION_KEY_FILE}, generating new key")
     key = Fernet.generate_key()
     with open(ENCRYPTION_KEY_FILE, 'wb') as f:
         f.write(key)
-        logging.debug(f"Generated and saved new Fernet key to {ENCRYPTION_KEY_FILE}")
+        # logging.debug(f"Generated and saved new Fernet key to {ENCRYPTION_KEY_FILE}")
     return key
 
 encryption_key = load_or_generate_key()
@@ -87,7 +89,7 @@ def load_user(user_id):
     user_data = app.db.Users.find_one({'_id': user_id})
     if user_data:
         logging.debug(f"Loaded user: {user_data['email']} with ID: {user_id}")
-        return User(email=user_data['email'], id=str(user_data['_id']))
+        return User(email=user_data['email'], id=str(user_data['_id']),username=user_data['username'])
     return None
 
 
@@ -120,6 +122,13 @@ def entry_sentiment(polarity):
 def all_journals():
     entries = app.db.Journals.find({'user_id': current_user.get_id()})
     decrypted_entries = []
+
+    print("current_user",current_user.get_id())
+    
+    user_data = app.db.Users.find_one({'_id': current_user.get_id()})
+    print("user_data",user_data)
+    """username = user_data['username']
+    print("user",username)"""
 
     # Get year and month from query params or default to current
     year = int(request.args.get('year', datetime.now().year))
@@ -158,12 +167,11 @@ def all_journals():
         
         date_sentiments[entry_date] = entry_sentiment(polarity) 
     
-    print("date_sentiments",date_sentiments)
+    
     
     if selected_date:
         start_of_week, end_of_week = get_week_boundaries(selected_date)
-        print("start_of_week",start_of_week)
-        print("end_of_week",end_of_week)
+        
         entries = app.db.Journals.find({
             'user_id': current_user.get_id() ,
             'timestamp': {
@@ -181,9 +189,9 @@ def all_journals():
             }
         }).sort('date', 1)
         #display_title = f"{calendar.month_name[month]} Journal Entries"
-    print("selected_date",selected_date)
+    
     for entry in entries:
-        print("entry",entry)
+       
         timestamp = datetime.fromisoformat(entry.get('timestamp')) if entry.get('timestamp') else None
         #formatted_date = timestamp.strftime('%a, %B, %d')
         day = timestamp.strftime('%a')
@@ -199,7 +207,7 @@ def all_journals():
             'month': month,
             'date': date 
         })
-        print("decrypted_entries",decrypted_entries)
+        
 
     return render_template(
         'calendar.html',
@@ -222,7 +230,7 @@ def all_journals():
 @login_required
 @app.route('/entry/<entry_id>')
 def entry_detail(entry_id): 
-    logging.debug(f"Accessing all_journals for user: {current_user.get_id()}")
+    # logging.debug(f"Accessing all_journals for user: {current_user.get_id()}")
         
     # add entry_id to fetch single entry
     entries = app.db.Journals.find({'_id': ObjectId(entry_id), 'user_id': current_user.get_id() })
@@ -251,7 +259,7 @@ def entry_detail(entry_id):
             'date': date,
             'year': year,
         })
-        #print("decrypted_entries",decrypted_entries)
+        
         if polarity_value == 'positive':
             e1,e2,e3,e4,e5,e6,e7,e8,e9 = happy_emojis.values()
         elif polarity_value == 'negative':  
@@ -264,7 +272,7 @@ def entry_detail(entry_id):
             quotes = json.load(f)
 
         quote_val = random.randint(0,19)
-        print("quote_val",quote_val)
+        
         quote = quotes[polarity_value][quote_val]
         
         
@@ -303,7 +311,7 @@ def add_entry():
             'timestamp': datetime.now(pytz.timezone('Asia/Kolkata')).isoformat()
         }
         app.db.Journals.insert_one(entry)  
-        flash('Journal entry saved successfully!', 'success')
+        #flash('Journal entry saved successfully!', 'success')
         return redirect(url_for('all_journals'))
     
     return render_template('write.html', form=form, title='New Journal Entry', e1="😂", e2="😍",e3="😎",e4="😁",e5="🤭",e6="🤫",e7="😚",e8="😇",e9="😉")
@@ -321,7 +329,7 @@ def register():
         password = form.password.data  # Hash password in production
         
         if app.db.Users.find_one({'username': username}) or app.db.Users.find_one({'email': email}):
-            flash('Username or email already exists.', 'danger')
+            #flash('Username or email already exists.', 'danger')
             return render_template('register.html', form=form)
         
         user_id = str(app.db.Users.count_documents({}) + 1)
@@ -333,14 +341,14 @@ def register():
         }
         app.db.Users.insert_one(user_creds)
 
-        flash('Registration successful! Please log in.', 'success')
+        #flash('Registration successful! Please log in.', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', form=form, title='Register')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        logging.debug(f"User already authenticated: {current_user.get_id()}")
+        # logging.debug(f"User already authenticated: {current_user.get_id()}")
         return redirect(url_for('all_journals'))
     
     form = LoginForm()
@@ -348,34 +356,40 @@ def login():
 
         username = form.username.data
         password = form.password.data
-        logging.debug(f"Login attempt for username: {username}")
+        # logging.debug(f"Login attempt for username: {username}")
         user_data = app.db.Users.find_one({'username': username})
+        print("user_data",user_data)
         if user_data:
             if user_data and check_password_hash(user_data['password'], password): 
                 # Verify hashed password in production 
-                user = User(user_data['email'], str(user_data['_id']))  
-                login_user(user,remember=False)#form.remember.data 
+                user = User(user_data['email'], str(user_data['_id']),user_data['username'])  
+                login_user(user,remember=form.remember.data) 
                 logging.debug(f"User {username} logged in, session: {session.get('_user_id')}")
-              
+                #flash('logged in', 'success')
                 return redirect(url_for('all_journals'))
             else:
                 logging.warning(f"Failed login attempt for username: {username}")
-                flash('Invalid username or password.', 'danger')
+                #flash('Invalid username or password.', 'danger')
         else:
             logging.warning(f"Login attempt with non-existent username: {username}")
-            flash('User does not exists Please Sign UP', 'danger')
+            #flash('User does not exists Please Sign UP', 'danger')
 
     return render_template('login.html', form=form, title='Login')
 
 @app.route('/logout')
 def logout():
-    logout_user()
+    if current_user.is_authenticated:
+       
+        login_manager.needs_refresh = True  
+        logout_user()  
     session.clear() 
     response = make_response(redirect(url_for('login')))
     response.set_cookie('remember_token','', expires=0, path='/', secure=True, httponly=True, samesite='Lax')
     response.delete_cookie('session', path='/')  
 
-    flash('You have been logged out.', 'info')
+    
+
+    #flash('You have been logged out.', 'info')
     return response
     
 
@@ -419,11 +433,11 @@ def forgot_password():
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
-    print(token)
+    
     user = verify_reset_token(token)
-    print(user)
+    
     if not user:
-        flash('Invalid or expired token.', 'danger')
+        #flash('Invalid or expired token.', 'danger')
         return redirect(url_for('forgot_password'))
     
     form = ResetPasswordForm()
@@ -433,7 +447,7 @@ def reset_password(token):
             {'email': user['email']},
             {'$set': {'password': hashed_password, 'reset_token': None, 'reset_token_expiry': None}}
         )
-        flash('Your password has been updated! Please log in.', 'success')
+        #flash('Your password has been updated! Please log in.', 'success')
         return redirect(url_for('login'))
     
     return render_template('reset_password.html', form=form, title='Reset Password', token=token)
@@ -441,7 +455,7 @@ def reset_password(token):
 @app.route('/journal/sentiment_report', methods=['GET'])
 @login_required
 def sentiment_report():
-    logging.debug(f"Generating sentiment report for user: {current_user.get_id()}")
+    # logging.debug(f"Generating sentiment report for user: {current_user.get_id()}")
     # Get date range from query params (default: last 30 days)
     end_date = request.args.get('end_date', datetime.now(pytz.timezone('Asia/Kolkata')).isoformat())
     start_date = request.args.get('start_date', (datetime.now(pytz.timezone('Asia/Kolkata')) - timedelta(days=30)).isoformat())
@@ -449,7 +463,7 @@ def sentiment_report():
         start_date = datetime.fromisoformat(start_date)
         end_date = datetime.fromisoformat(end_date)
     except ValueError:
-        flash('Invalid date format.', 'danger')
+        ##flash('Invalid date format.', 'danger')
         return redirect(url_for('all_journals'))
 
     entries = app.db.Journals.find({
@@ -467,7 +481,8 @@ def sentiment_report():
             polarities.append(entry.get('sentiment', {}).get('polarity', 0))
             subjectivities.append(entry.get('sentiment', {}).get('subjectivity', 0))
         except Exception as e:
-            logging.error(f"Error processing entry for report: {e}")
+            pass
+            # logging.error(f"Error processing entry for report: {e}")
 
     # Create Plotly figure
     fig = go.Figure()
@@ -498,4 +513,4 @@ def sentiment_report():
     return render_template('sentiment_report.html', graph_json=graph_json, start_date=start_date.isoformat(), end_date=end_date.isoformat())
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
